@@ -13,11 +13,12 @@ body {
   --background: black;
   --secondary: rgba(255, 255, 255, 0.05);
   --border-colour: rgb(255, 255, 255, 0.2);
+  --link-colour: rgb(0, 140, 255);
   --padding: 1em;
 }
 
 a {
-  color: rgb(0, 109, 252);
+  color: var(--link-colour);
   text-decoration: none;
 }
 

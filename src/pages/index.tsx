@@ -26,15 +26,15 @@ export default function Home() {
 
             return (
               <div className={styles.card} key={repo.id}>
-                <div className={styles.cardBody}>
-                  <div className={styles.cardDetails}>
-                    <a href={repo.url} target="_about">
+                <a href={repo.url} target="_about">
+                  <div className={styles.cardBody}>
+                    <div className={styles.cardDetails}>
                       <h3>{repo.name}</h3>
-                    </a>
-                    <p>{repo.description ?? DEFAULT_DESCRIPTION}</p>
+                      <p>{repo.description ?? DEFAULT_DESCRIPTION}</p>
+                    </div>
                   </div>
-                </div>
-                <footer className={styles.cardFooter}>Updated {agoPretty} ago</footer>
+                  <footer className={styles.cardFooter}>Updated {agoPretty} ago</footer>
+                </a>
               </div>
             );
           })}
@@ -47,15 +47,15 @@ export default function Home() {
         <div className={styles.cardContainer}>
           {memberData.members.map((user) => (
             <div className={styles.card} key={user.id}>
-              <div className={styles.cardBody}>
-                <img className={styles.cardImage} src={user.avatar} />
-                <div className={styles.cardDetails}>
-                  <a href={user.url} target="_about">
+              <a href={user.url} target="_about">
+                <div className={styles.cardBody}>
+                  <img className={styles.cardImage} src={user.avatar} />
+                  <div className={styles.cardDetails}>
                     <h3>{user.username}</h3>
-                  </a>
-                  <p>{user.bio ?? DEFAULT_BIO}</p>
+                    <p>{user.bio ?? DEFAULT_BIO}</p>
+                  </div>
                 </div>
-              </div>
+              </a>
             </div>
           ))}
         </div>

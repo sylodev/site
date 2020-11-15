@@ -20,6 +20,14 @@
 }
 
 .card h3 {
+  color: var(--link-colour);
+}
+
+.card:hover h3 {
+  text-decoration: underline;
+}
+
+.card h3 {
   line-height: 5px;
 }
 
@@ -27,6 +35,7 @@
   padding: calc(var(--padding) / 2) var(--padding);
   display: flex;
   align-items: center;
+  color: white;
 }
 
 .cardImage {
