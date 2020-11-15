@@ -1,21 +1,26 @@
-import styles from "../styles/Home.module.css";
 import prettyMS from "pretty-ms";
 import Brand from "../components/Brand";
+import { useMembers } from "../hooks/useMembers";
+import { useRepos } from "../hooks/useRepos";
+import styles from "../styles/Home.module.css";
 
 const DEFAULT_BIO = "I am a very mysterious person, so mysterious that I didn't set a bio.";
 const DEFAULT_DESCRIPTION = "Even we don't know what this repo does.";
 let _cached;
 
-export default function Home({ users, repos }) {
+export default function Home() {
+  const repoData = useRepos();
+  const memberData = useMembers();
+
   return (
     <div className={styles.container}>
       <Brand />
       <section id="projects" className={styles.section}>
         <div className={styles.sectionLabel}>
-          <h3>Projects</h3>
+          <h3>Projects {repoData.loading && " (loading)"}</h3>
         </div>
         <div className={styles.cardContainer}>
-          {repos.map((repo) => {
+          {repoData.repos.map((repo) => {
             const agoMS = Date.now() - new Date(repo.updated_at).getTime();
             const agoPretty = prettyMS(agoMS, { compact: true });
 
@@ -37,10 +42,10 @@ export default function Home({ users, repos }) {
       </section>
       <section id="members" className={styles.section}>
         <div className={styles.sectionLabel}>
-          <h3>Members</h3>
+          <h3>Members {memberData.loading && " (loading)"}</h3>
         </div>
         <div className={styles.cardContainer}>
-          {users.map((user) => (
+          {memberData.members.map((user) => (
             <div className={styles.card} key={user.id}>
               <div className={styles.cardBody}>
                 <img className={styles.cardImage} src={user.avatar} />
@@ -57,41 +62,4 @@ export default function Home({ users, repos }) {
       </section>
     </div>
   );
-}
-
-export async function getStaticProps() {
-  if (_cached) return _cached;
-  const headers = { Authorization: `token ${process.env.GITHUB_TOKEN} ` };
-  const members = await fetch("https://api.github.com/orgs/sylo-digital/members", { headers }).then((r) => r.json());
-  const repos = await fetch("https://api.github.com/orgs/sylo-digital/repos", { headers })
-    .then((r) => r.json())
-    .then((repos) =>
-      repos.map((repo) => ({
-        id: repo.id,
-        name: repo.full_name,
-        description: repo.description,
-        forks: repo.forks_count,
-        url: repo.html_url,
-        updated_at: repo.updated_at,
-      }))
-    );
-
-  const userPromises = [];
-  for (const member of members) {
-    const promise = fetch(member.url, { headers })
-      .then((r) => r.json())
-      .then((user) => ({
-        id: user.id,
-        url: user.html_url,
-        username: user.name ?? user.login,
-        avatar: user.avatar_url,
-        bio: user.bio,
-      }));
-
-    userPromises.push(promise);
-  }
-
-  const users = await Promise.all(userPromises);
-  _cached = { props: { users, repos } };
-  return _cached;
 }
