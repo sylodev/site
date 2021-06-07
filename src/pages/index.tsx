@@ -1,65 +1,44 @@
 import prettyMS from "pretty-ms";
-import Brand from "../components/Brand";
-import { useMembers } from "../hooks/useMembers";
-import { useRepos } from "../hooks/useRepos";
-import styles from "../styles/Home.module.css";
+import Brand from "../components/brand/brand";
+import useSWR from "swr";
+import { Repository } from "../types";
+import { Center } from "../components/center";
+import { Card } from "../components/card";
 
-const DEFAULT_BIO = "I am a very mysterious person, so mysterious that I didn't set a bio.";
 const DEFAULT_DESCRIPTION = "Even we don't know what this repo does.";
-let _cached;
 
 export default function Home() {
-  const repoData = useRepos();
-  const memberData = useMembers();
+  const { data, error } = useSWR<Repository[]>("https://api.github.com/orgs/sylo-digital/repos");
+  if (error) {
+    return <p>{error.message}</p>;
+  }
 
   return (
-    <div className={styles.container}>
-      <Brand />
-      <section id="projects" className={styles.section}>
-        <div className={styles.sectionLabel}>
-          <h3>Projects {repoData.loading && " (loading)"}</h3>
+    <Center>
+      <div className="container mx-auto">
+        <Brand />
+        <div className="text-gray">
+          <h3>Projects {!data && " (loading)"}</h3>
         </div>
-        <div className={styles.cardContainer}>
-          {repoData.repos.map((repo) => {
-            const agoMS = Date.now() - new Date(repo.updated_at).getTime();
-            const agoPretty = prettyMS(agoMS, { compact: true });
+        <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
+          {data?.map((repo) => {
+            const lastUpdated = new Date(repo.updated_at).getTime();
+            const relativeTimeAgo = Date.now() - lastUpdated;
+            const prettyTimeAgo = prettyMS(relativeTimeAgo, { verbose: true, unitCount: 2 });
+            const timestamp = `${prettyTimeAgo} ago`;
 
             return (
-              <div className={styles.card} key={repo.id}>
-                <a href={repo.url} target="_about">
-                  <div className={styles.cardBody}>
-                    <div className={styles.cardDetails}>
-                      <h3>{repo.name}</h3>
-                      <p>{repo.description ?? DEFAULT_DESCRIPTION}</p>
-                    </div>
-                  </div>
-                  <footer className={styles.cardFooter}>Updated {agoPretty} ago</footer>
-                </a>
-              </div>
+              <Card
+                description={repo.description ?? DEFAULT_DESCRIPTION}
+                footer={timestamp}
+                link={repo.html_url}
+                title={repo.full_name}
+                key={repo.id}
+              />
             );
           })}
         </div>
-      </section>
-      <section id="members" className={styles.section}>
-        <div className={styles.sectionLabel}>
-          <h3>Members {memberData.loading && " (loading)"}</h3>
-        </div>
-        <div className={styles.cardContainer}>
-          {memberData.members.map((user) => (
-            <div className={styles.card} key={user.id}>
-              <a href={user.url} target="_about">
-                <div className={styles.cardBody}>
-                  <img className={styles.cardImage} src={user.avatar} />
-                  <div className={styles.cardDetails}>
-                    <h3>{user.username}</h3>
-                    <p>{user.bio ?? DEFAULT_BIO}</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
+      </div>
+    </Center>
   );
 }

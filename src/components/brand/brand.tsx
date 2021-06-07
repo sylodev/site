@@ -1,46 +1,44 @@
-import styles from "../styles/Brand.module.css";
+import style from "./brand.module.css";
+import classNames from "classnames";
 
 interface Event {
   title: string;
-  active_override?: boolean;
   start_date: Date;
   end_date: Date;
   className?: string;
 }
 
 const CURRENT_YEAR = new Date().getFullYear();
-// Feel free to submit a PR for more events or improve existing ones because I kinda half assed some of them
-const Events: Event[] = [
+const EVENTS: Event[] = [
   {
     title: `Pride Month ${CURRENT_YEAR} 🌈`,
     start_date: new Date(`June ${CURRENT_YEAR}`),
     end_date: new Date(`July ${CURRENT_YEAR}`),
-    className: styles.prideMonth,
+    className: style.prideMonth,
   },
   {
     title: "Bisexual Awareness Week",
     start_date: new Date(`16 September ${CURRENT_YEAR}`),
     end_date: new Date(`24 September ${CURRENT_YEAR}`),
-    className: styles.biAwareness,
+    className: style.biAwareness,
   },
   {
     title: "Happy Halloween 👻",
     start_date: new Date(`October ${CURRENT_YEAR}`),
     end_date: new Date(`November ${CURRENT_YEAR}`),
-    className: styles.halloween,
+    className: style.halloween,
   },
   {
     title: "Transgender Awareness Week",
     start_date: new Date(`13 November ${CURRENT_YEAR}`),
     end_date: new Date(`20 November ${CURRENT_YEAR}`),
-    className: styles.transAwareness,
+    className: style.transAwareness,
   },
 ];
 
 function getActiveEvent(): Event | undefined {
   const now = new Date().getTime();
-  for (const event of Events) {
-    if (event.active_override) return event;
+  for (const event of EVENTS) {
     if (event.start_date.getTime() > now) continue;
     if (event.end_date.getTime() < now) continue;
     return event;
@@ -49,10 +47,10 @@ function getActiveEvent(): Event | undefined {
 
 export default function Brand() {
   const event = getActiveEvent();
-  const className = event ? `${styles.brand} ${event.className}` : styles.brand;
+  const classes = classNames("text-transparent bg-clip-text", event?.className);
   return (
-    <h1 className={className} title={event?.title}>
-      sylo.digital
+    <h1 className="pb-4 text-6xl font-bold" title={event?.title}>
+      <span className={classes}>sylo.digital</span>
     </h1>
   );
 }

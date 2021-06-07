@@ -1,23 +1,27 @@
 {
-  "name": "site",
+  "name": "@sylo-digital/site",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "watch": "next dev",
     "build": "next build",
-    "start": "next start",
-    "deploy": "rm -rf out && next build && next export && gh-pages -d out -t true"
+    "start": "next start"
   },
   "dependencies": {
-    "next": "10.0.1",
+    "classnames": "^2.3.1",
+    "next": "10.2.3",
     "pretty-ms": "^7.0.1",
-    "react": "17.0.1",
-    "react-dom": "17.0.1"
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "swr": "^0.5.6",
+    "tailwindcss": "^2.1.4"
   },
   "devDependencies": {
-    "@types/node": "^14.14.7",
-    "@types/react": "^16.9.56",
-    "gh-pages": "^3.1.0",
-    "typescript": "^4.0.5"
+    "@types/node": "^15.12.1",
+    "@types/react": "^17.0.9",
+    "autoprefixer": "^10.2.6",
+    "gh-pages": "^3.2.0",
+    "postcss": "^8.3.0",
+    "typescript": "^4.3.2"
   }
 }

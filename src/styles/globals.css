@@ -1,29 +1,11 @@
-html,
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 body {
-  padding: 0;
-  margin: 0;
-  background: black;
-  color: white;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans,
-    Helvetica Neue, sans-serif;
+  @apply text-white bg-background;
 }
 
-:root {
-  --foreground: white;
-  --background: black;
-  --secondary: rgba(255, 255, 255, 0.05);
-  --border-colour: rgb(255, 255, 255, 0.2);
-  --link-colour: rgb(0, 140, 255);
-  --padding: 1em;
-}
-
-a {
-  color: var(--link-colour);
-  text-decoration: none;
-}
-
-*,
-*:before,
-*:after {
-  box-sizing: border-box;
+::selection {
+  @apply text-white bg-hotPink;
 }
