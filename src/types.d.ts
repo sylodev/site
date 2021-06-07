@@ -75,6 +75,14 @@ export interface Repository {
   permissions: RepositoryPermissions;
 }
 
+export interface RepositoryPartial {
+  id: number;
+  full_name: string;
+  html_url: string;
+  description: string;
+  updated_at: Date;
+}
+
 export interface RepositoryLicense {
   key: string;
   name: string;

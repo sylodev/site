@@ -1,14 +1,20 @@
 import prettyMS from "pretty-ms";
 import Brand from "../components/brand/brand";
 import useSWR from "swr";
-import { Repository } from "../types";
+import { Repository, RepositoryPartial } from "../types";
 import { Center } from "../components/center";
 import { Card } from "../components/card";
+import { GetStaticProps } from "next";
 
 const DEFAULT_DESCRIPTION = "Even we don't know what this repo does.";
+const REPO_URL = "https://api.github.com/orgs/sylo-digital/repos";
 
-export default function Home() {
-  const { data, error } = useSWR<Repository[]>("https://api.github.com/orgs/sylo-digital/repos");
+export interface HomeProps {
+  initialData?: RepositoryPartial[];
+}
+
+export default function Home({ initialData }: HomeProps) {
+  const { data, error } = useSWR<RepositoryPartial[]>(REPO_URL, { initialData });
   if (error) {
     return <p>{error.message}</p>;
   }
@@ -24,7 +30,7 @@ export default function Home() {
           {data?.map((repo) => {
             const lastUpdated = new Date(repo.updated_at).getTime();
             const relativeTimeAgo = Date.now() - lastUpdated;
-            const prettyTimeAgo = prettyMS(relativeTimeAgo, { verbose: true, unitCount: 2 });
+            const prettyTimeAgo = prettyMS(relativeTimeAgo, { verbose: true, compact: true });
             const timestamp = `${prettyTimeAgo} ago`;
 
             return (
@@ -42,3 +48,23 @@ export default function Home() {
     </Center>
   );
 }
+
+export const getStaticProps: GetStaticProps<HomeProps> = async () => {
+  const response = await fetch(REPO_URL);
+  if (!response.ok) {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+
+  const body = (await response.json()) as Repository[];
+  return {
+    props: {
+      initialData: body.map<RepositoryPartial>((item) => ({
+        id: item.id,
+        full_name: item.full_name,
+        html_url: item.html_url,
+        description: item.description,
+        updated_at: item.updated_at,
+      })),
+    },
+  };
+};

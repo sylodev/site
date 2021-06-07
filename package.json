@@ -5,7 +5,8 @@
   "scripts": {
     "watch": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "deploy": "rm -rf out && next build && next export && gh-pages -d out -t true"
   },
   "dependencies": {
     "classnames": "^2.3.1",
