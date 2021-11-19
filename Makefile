@@ -5,6 +5,7 @@ SHELL := /bin/bash
 .PHONY: build
 build: install
 	@pnpm -r run build
+	@pnpm -r run export
 
 .PHONY: install
 install:
