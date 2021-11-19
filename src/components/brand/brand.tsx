@@ -1,5 +1,5 @@
-import style from "./brand.module.css";
 import classNames from "classnames";
+import style from "./brand.module.css";
 
 interface Event {
   title: string;
@@ -47,9 +47,9 @@ function getActiveEvent(): Event | undefined {
 
 export default function Brand() {
   const event = getActiveEvent();
-  const classes = classNames("text-transparent bg-clip-text", event?.className);
+  const classes = classNames(event ? "text-transparent bg-clip-text" : "text-white", event?.className);
   return (
-    <h1 className="pb-4 text-6xl font-bold" title={event?.title}>
+    <h1 className="pb-4 text-6xl font-bold text-white" title={event?.title}>
       <span className={classes}>sylo.digital</span>
     </h1>
   );

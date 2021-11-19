@@ -14,7 +14,7 @@ export interface HomeProps {
 }
 
 export default function Home({ initialData }: HomeProps) {
-  const { data, error } = useSWR<RepositoryPartial[]>(REPO_URL, { initialData });
+  const { data, error } = useSWR<RepositoryPartial[]>(REPO_URL, { fallbackData: initialData });
   if (error) {
     return <p>{error.message}</p>;
   }
@@ -23,27 +23,27 @@ export default function Home({ initialData }: HomeProps) {
     <Center>
       <div className="container mx-auto">
         <Brand />
-        <div className="text-gray">
-          <h3>Projects {!data && " (loading)"}</h3>
-        </div>
-        <div className="grid grid-cols-1 gap-4 p-4 md:grid-cols-2 lg:grid-cols-3">
-          {data?.map((repo) => {
-            const lastUpdated = new Date(repo.updated_at).getTime();
-            const relativeTimeAgo = Date.now() - lastUpdated;
-            const prettyTimeAgo = prettyMS(relativeTimeAgo, { verbose: true, compact: true });
-            const timestamp = `${prettyTimeAgo} ago`;
+        <section id="projects">
+          <h3 className="text-gray text-lg">Projects {!data && " (loading)"}</h3>
+          <div className="grid grid-cols-1 gap-2 mt-1 md:grid-cols-2 lg:grid-cols-3">
+            {data?.map((repo) => {
+              const lastUpdated = new Date(repo.updated_at).getTime();
+              const relativeTimeAgo = Date.now() - lastUpdated;
+              const prettyTimeAgo = prettyMS(relativeTimeAgo, { verbose: true, compact: true });
+              const footer = `Updated ${prettyTimeAgo} ago`;
 
-            return (
-              <Card
-                description={repo.description ?? DEFAULT_DESCRIPTION}
-                footer={timestamp}
-                link={repo.html_url}
-                title={repo.full_name}
-                key={repo.id}
-              />
-            );
-          })}
-        </div>
+              return (
+                <Card
+                  description={repo.description ?? DEFAULT_DESCRIPTION}
+                  footer={footer}
+                  link={repo.html_url}
+                  title={repo.full_name}
+                  key={repo.id}
+                />
+              );
+            })}
+          </div>
+        </section>
       </div>
     </Center>
   );
