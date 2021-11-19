@@ -4,9 +4,9 @@ SHELL := /bin/bash
 
 .PHONY: build
 build: install
-    @pnpm -r run build
+	@pnpm -r run build
 
 .PHONY: install
 install:
-    @npm install -g pnpm
-    @pnpm install
+	@npm install -g pnpm
+	@pnpm install
